@@ -8,4 +8,4 @@ uv run jupyter notebook
 ```
 
 ## Notebooks
-- [**OMOP metadata**](/OMOP-metadata/README.md) visualising OMOP metadata
+- [**OMOP metadata**](/OMOP-metadata) visualising OMOP metadata
