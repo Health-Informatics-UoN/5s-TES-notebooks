@@ -10,7 +10,13 @@ dependencies = [
     "pydantic>=2.12.5",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=9.0.2",
+]
+
 [tool.uv.workspace]
 members = [
     "OMOP-metadata",
+    "descriptive-stats",
 ]
