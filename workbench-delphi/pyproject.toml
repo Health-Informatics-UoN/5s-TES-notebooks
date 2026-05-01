@@ -1,7 +1,15 @@
 [project]
 name = "workbench-delphi"
 version = "0.1.0"
-description = "Add your description here"
+description = "Example notebooks using the 5s-TES workbench to analyse the Delphi 100k synthetic dataset"
 readme = "README.md"
-requires-python = ">=3.12"
-dependencies = []
+requires-python = ">=3.13"
+dependencies = [
+  "five-safes-tes-workbench>=0.2.1",
+  "descriptive-stats",
+  "omop-metadata",
+]
+
+[tool.uv.sources]
+descriptive-stats = { workspace = true }
+omop-metadata = { workspace = true }
