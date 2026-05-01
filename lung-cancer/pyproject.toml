@@ -1,0 +1,14 @@
+[project]
+name = "lung-cancer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "descriptive-stats",
+  "omop-metadata"
+]
+
+[tool.uv.sources]
+descriptive-stats = { workspace = true }
+omop-metadata = { workspace = true }

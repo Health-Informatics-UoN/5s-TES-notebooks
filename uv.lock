@@ -14,7 +14,9 @@ resolution-markers = [
 members = [
     "5s-tes-notebooks",
     "descriptive-stats",
+    "lung-cancer",
     "omop-metadata",
+    "workbench-delphi",
 ]
 
 [[package]]
@@ -424,7 +426,7 @@ wheels = [
 [[package]]
 name = "descriptive-stats"
 version = "0.1.0"
-source = { virtual = "descriptive-stats" }
+source = { editable = "descriptive-stats" }
 dependencies = [
     { name = "scipy" },
 ]
@@ -889,6 +891,21 @@ wheels = [
 ]
 
 [[package]]
+name = "lung-cancer"
+version = "0.1.0"
+source = { virtual = "lung-cancer" }
+dependencies = [
+    { name = "descriptive-stats" },
+    { name = "omop-metadata" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "descriptive-stats", editable = "descriptive-stats" },
+    { name = "omop-metadata", editable = "OMOP-metadata" },
+]
+
+[[package]]
 name = "markupsafe"
 version = "3.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1137,7 +1154,7 @@ wheels = [
 [[package]]
 name = "omop-metadata"
 version = "0.1.0"
-source = { virtual = "OMOP-metadata" }
+source = { editable = "OMOP-metadata" }
 dependencies = [
     { name = "altair" },
     { name = "altair-upset" },
@@ -1971,3 +1988,8 @@ sdist = { url = "https://files.pythonhosted.org/packages/bd/f4/c67440c7fb409a71b
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl", hash = "sha256:8156704e4346a571d9ce73b84bee86a29906c9abfd7223b7228a28899ccf3366", size = 2196503, upload-time = "2025-11-01T21:15:53.565Z" },
 ]
+
+[[package]]
+name = "workbench-delphi"
+version = "0.1.0"
+source = { virtual = "workbench-delphi" }

@@ -20,4 +20,6 @@ test = [
 members = [
     "OMOP-metadata",
     "descriptive-stats",
+    "lung-cancer",
+    "workbench-delphi",
 ]
