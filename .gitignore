@@ -10,3 +10,5 @@ wheels/
 .venv
 .DS_Store
 contingency-tables/.DS_Store
+workbench-delphi/config.yml
+/workbench-delphi/output

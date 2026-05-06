@@ -1,0 +1,17 @@
+config:
+  project: "DelphiDemo"
+  tes_base_url: "https://api.5s-tes.federated-research.com"
+  minio_sts_endpoint: "https://api.minio.5s-tes.federated-research.com/sts"
+  minio_endpoint: "https://api.minio.5s-tes.federated-research.com"
+  minio_output_bucket: "126104output"
+  tres:
+    - "Nottingham TRE 01"
+    - "Nottingham TRE 02"
+
+
+auth:
+    client_id: "Submission-API-Workbench"
+    client_secret: "1FIMfupv57liaaalOyrlbsytgNywswfD"
+    username: "james_white"
+    password: "It11platesTRE"
+    keycloak_url: "https://drs-core-identity.azurewebsites.net/"

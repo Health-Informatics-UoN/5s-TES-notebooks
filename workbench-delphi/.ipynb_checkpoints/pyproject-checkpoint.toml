@@ -7,10 +7,8 @@ requires-python = ">=3.13"
 dependencies = [
   "descriptive-stats",
   "omop-metadata",
-  "contingency-tables",
 ]
 
 [tool.uv.sources]
 descriptive-stats = { workspace = true }
 omop-metadata = { workspace = true }
-contingency-tables = { workspace = true}

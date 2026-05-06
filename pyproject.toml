@@ -7,9 +7,10 @@ requires-python = ">=3.13"
 dependencies = [
     "jupyter>=1.1.1",
     "pandas>=3.0.1",
-    "partialstats",
     "pydantic>=2.12.5",
+    "five-safes-tes-workbench>=0.2.4",
     "scipy>=1.17.1",
+    "partialstats",
 ]
 
 [project.optional-dependencies]
@@ -23,7 +24,8 @@ members = [
     "descriptive-stats",
     "lung-cancer",
     "workbench-delphi",
+    "contingency-tables",
 ]
 
 [tool.uv.sources]
-partialstats = { path = "../../experiments/python-monoidal-aggregation" }
+partialstats = { git = "https://github.com/Health-Informatics-UoN/partialstats/" }
