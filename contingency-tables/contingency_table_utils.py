@@ -20,9 +20,9 @@ def read_contingency_table_from_json(filepath: str) -> ContingencyTable:
 
 
 def aggregate_tables(tables: list[ContingencyTable]) -> ContingencyTable:
-    variables = set(tables[0].data.columns)
+    variables = list(tables[0].data.columns)
     for table in tables:
-        if set(table.data.columns) != variables:
+        if set(table.data.columns) != set(variables):
             raise ValueError(f"Variables {set(table.data.columns)} and {variables} do not match")
 
     concatenated_tables = pd.concat([table.data for table in tables])

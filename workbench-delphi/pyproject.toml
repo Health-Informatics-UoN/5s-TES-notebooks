@@ -1,0 +1,16 @@
+[project]
+name = "workbench-delphi"
+version = "0.1.0"
+description = "Example notebooks using the 5s-TES workbench to analyse the Delphi 100k synthetic dataset"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+  "descriptive-stats",
+  "omop-metadata",
+  "contingency-tables",
+]
+
+[tool.uv.sources]
+descriptive-stats = { workspace = true }
+omop-metadata = { workspace = true }
+contingency-tables = { workspace = true}
