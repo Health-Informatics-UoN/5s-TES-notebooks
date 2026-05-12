@@ -5,12 +5,17 @@ description = "Example notebooks using the 5s-TES workbench to analyse the Delph
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-  "descriptive-stats",
+  "jupyter>=1.1.1",
+  "pandas>=3.0.1",
+  "numpy>=2.0.0",
+  "scipy>=1.17.1",
+  "five-safes-tes-workbench>=0.2.4",
+  "partialstats",
   "omop-metadata",
   "contingency-tables",
 ]
 
 [tool.uv.sources]
-descriptive-stats = { workspace = true }
+partialstats = { git = "https://github.com/Health-Informatics-UoN/partialstats/" }
 omop-metadata = { workspace = true }
-contingency-tables = { workspace = true}
+contingency-tables = { workspace = true }
