@@ -411,7 +411,7 @@ wheels = [
 [[package]]
 name = "descriptive-stats"
 version = "0.1.0"
-source = { editable = "descriptive-stats" }
+source = { virtual = "descriptive-stats" }
 dependencies = [
     { name = "scipy" },
 ]
@@ -2123,13 +2123,23 @@ version = "0.1.0"
 source = { virtual = "workbench-delphi" }
 dependencies = [
     { name = "contingency-tables" },
-    { name = "descriptive-stats" },
+    { name = "five-safes-tes-workbench" },
+    { name = "jupyter" },
+    { name = "numpy" },
     { name = "omop-metadata" },
+    { name = "pandas" },
+    { name = "partialstats" },
+    { name = "scipy" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "contingency-tables", editable = "contingency-tables" },
-    { name = "descriptive-stats", editable = "descriptive-stats" },
+    { name = "five-safes-tes-workbench", specifier = ">=0.2.4" },
+    { name = "jupyter", specifier = ">=1.1.1" },
+    { name = "numpy", specifier = ">=2.0.0" },
     { name = "omop-metadata", editable = "OMOP-metadata" },
+    { name = "pandas", specifier = ">=3.0.1" },
+    { name = "partialstats", git = "https://github.com/Health-Informatics-UoN/partialstats/" },
+    { name = "scipy", specifier = ">=1.17.1" },
 ]
