@@ -1238,7 +1238,7 @@ wheels = [
 [[package]]
 name = "partialstats"
 version = "0.1.0"
-source = { git = "https://github.com/Health-Informatics-UoN/partialstats/#49427662318cb491a810ca05b5b6ff5302bebde0" }
+source = { git = "https://github.com/Health-Informatics-UoN/partialstats/#204ac37f111fc03d8449694c6ca3d343e015f645" }
 dependencies = [
     { name = "pytest" },
 ]
