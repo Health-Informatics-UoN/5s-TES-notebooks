@@ -39,7 +39,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "five-safes-tes-workbench", specifier = ">=0.2.4" },
+    { name = "five-safes-tes-workbench", specifier = ">=0.4.0" },
     { name = "jupyter", specifier = ">=1.1.1" },
     { name = "pandas", specifier = ">=3.0.1" },
     { name = "partialstats", git = "https://github.com/Health-Informatics-UoN/partialstats/" },
@@ -448,7 +448,7 @@ wheels = [
 
 [[package]]
 name = "five-safes-tes-workbench"
-version = "0.2.4"
+version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "minio" },
@@ -457,9 +457,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "types-requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/55/8d/ae274b65cc84b0b7f796a296278b005f34afd9285d97e726003664854c87/five_safes_tes_workbench-0.2.4.tar.gz", hash = "sha256:0383e38304e5723fe5251611a9201c0041adea9019727bd822fee459dbc30899", size = 26713, upload-time = "2026-05-06T10:17:12.677Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6c/08/a1e736ac69f9ee0727ae5bd1f4b191fe1b205453829e9c33ad3123d57e32/five_safes_tes_workbench-0.4.0.tar.gz", hash = "sha256:b682f1520906f430129cae4d5d571075aa872e584f5236e19f68aa0cccfc4928", size = 29425, upload-time = "2026-08-24T15:43:38.154Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9c/8f/a0bab68417a9a7520f4821e42e7bdd302dc3992dbd2eb06f7b5047e4ecb6/five_safes_tes_workbench-0.2.4-py3-none-any.whl", hash = "sha256:3e2f1c062a29e3eede7a4c35028c994b83ad9cfcb19e1db9035f8696bedaa3c9", size = 46412, upload-time = "2026-05-06T10:17:11.199Z" },
+    { url = "https://files.pythonhosted.org/packages/af/cc/3c23be44d71d719024a23deda97e899b9153f45ce336a91273d6f3ab8524/five_safes_tes_workbench-0.4.0-py3-none-any.whl", hash = "sha256:44a5105796d163c8c923cc727249a36d9b9d2e803ddb085ab3a34d441bce3d09", size = 50957, upload-time = "2026-08-24T15:43:37.021Z" },
 ]
 
 [[package]]
