@@ -11,6 +11,7 @@ dependencies = [
     "five-safes-tes-workbench>=0.4.0",
     "scipy>=1.17.1",
     "partialstats",
+    "python-omop-vis",
 ]
 
 [project.optional-dependencies]
@@ -29,3 +30,4 @@ members = [
 
 [tool.uv.sources]
 partialstats = { git = "https://github.com/Health-Informatics-UoN/partialstats/" }
+python-omop-vis = { git = "https://github.com/health-Informatics-UoN/python-omop-vis" }
