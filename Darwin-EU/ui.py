@@ -3,6 +3,7 @@ import secrets
 import shlex
 import string
 from urllib.error import HTTPError
+import logging
 
 import ipywidgets as widgets
 from five_safes_tes_workbench.workbench import Workbench
@@ -10,12 +11,16 @@ from IPython.display import display
 from ipywidgets.widgets.widget_box import VBox
 
 class WorkbenchForm:
-    def __init__(self) -> None:
+    def __init__(
+            self,
+            layout: widgets.Layout = widgets.Layout(width = "50%")
+            ) -> None:
         self._username: widgets.Text = widgets.Text(
             value="Who are you?",
             placeholder="Who are you?",
             description="User name:",
             disabled=False,
+            layout=layout,
         )
 
         self._password: widgets.Password = widgets.Password(
@@ -23,6 +28,7 @@ class WorkbenchForm:
             placeholder="Enter password",
             description="Password:",
             disabled=False,
+            layout=layout,
         )
 
         # self.output = widgets.Output()
@@ -35,6 +41,9 @@ class WorkbenchForm:
     def validate(self) -> Workbench:
         wb = Workbench()
 
+        logger = logging.getLogger()
+        logger.setLevel(logging.CRITICAL)
+
         wb.validate(
             project="OHDSIDemo",
             tres=["Nottingham TRE 01", "Nottingham TRE 02"],
@@ -45,6 +54,8 @@ class WorkbenchForm:
             username=self._username.value,
             password=self._password.value,
         )
+
+        logger.setLevel(logging.INFO)
 
         return wb
 
@@ -60,18 +71,21 @@ class WorkbenchForm:
 
 
 class IncidencePrevalenceForm:
-    def __init__(self) -> None:
+    def __init__(
+            self,
+            layout: widgets.Layout = widgets.Layout(width = "50%")
+            ) -> None:
         self._concept_sets: widgets.Textarea = widgets.Textarea(
-            value='{"diabetes": [4131907,4220821]}', description="Concept sets"
+            value='{"diabetes": [4131907,4220821]}', description="Concept sets", layout=layout
         )
         self._outcome_cohort_name: widgets.Text = widgets.Text(
-            value="diabetes_cohort", description="Outcome cohort name"
+            value="diabetes_cohort", description="Outcome cohort name", layout=layout
         )
         self._denominator_cohort_name: widgets.Text = widgets.Text(
-            value="diabetes_denominator", description="Denominator cohort name"
+            value="diabetes_denominator", description="Denominator cohort name", layout=layout
         )
         self._researcher_name: widgets.Text = widgets.Text(
-            value="John Snow", description="Researcher name"
+            value="John Snow", description="Researcher name", layout=layout
         )
 
     @property
@@ -103,14 +117,18 @@ class IncidencePrevalenceForm:
         return "".join(secrets.choice(alphabet) for _ in range(id_length))
 
     def render_executor(self):
+        random_id = self.random_table_ids(8)
+        outcome_cohort_name = f"{self._outcome_cohort_name.value}{random_id}"
+        denominator_cohort_name = f"{self._denominator_cohort_name.value}{random_id}"
         full_script = (
-            f"Rscript inst/scripts/defineConceptCohortSet.R {shlex.quote(self._outcome_cohort_name.value)} "
+            f"Rscript inst/scripts/defineConceptCohortSet.R {shlex.quote(outcome_cohort_name)} "
             f"--conceptSet={shlex.quote(self.checked_concept_sets())} && "
-            f"Rscript inst/scripts/incidencePrevalence.R {shlex.quote(self._denominator_cohort_name.value)} "
-            f"--outcomeCohortName={shlex.quote(self._outcome_cohort_name.value)} "
+            f"Rscript inst/scripts/incidencePrevalence.R {shlex.quote(denominator_cohort_name)} "
+            f"--outcomeCohortName={shlex.quote(outcome_cohort_name)} "
+            "--denominatorCohortDateRange=1990-01-01,2030-01-01"
             f"--estimateIncidenceOutputPath=outputs/incidence.csv && "
-            f"Rscript inst/scripts/cleanUpCohortTables.R {shlex.quote(self._outcome_cohort_name.value)} && "
-            f"Rscript inst/scripts/cleanUpCohortTables.R {shlex.quote(self._denominator_cohort_name.value)}"
+            f"Rscript inst/scripts/cleanUpCohortTables.R {shlex.quote(outcome_cohort_name)} && "
+            f"Rscript inst/scripts/cleanUpCohortTables.R {shlex.quote(denominator_cohort_name)}"
         )
 
         return [

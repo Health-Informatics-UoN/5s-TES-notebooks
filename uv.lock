@@ -1831,8 +1831,8 @@ wheels = [
 
 [[package]]
 name = "python-omop-vis"
-version = "0.2.0"
-source = { git = "https://github.com/health-Informatics-UoN/python-omop-vis#e898a11ac9628b06e7b37b5c9e1a16f3965a9643" }
+version = "0.4.3"
+source = { git = "https://github.com/health-Informatics-UoN/python-omop-vis#71c3cc7527afdff2f4606750409e97bfb3a2d835" }
 dependencies = [
     { name = "pandas" },
     { name = "seaborn" },
