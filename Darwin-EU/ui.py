@@ -125,7 +125,7 @@ class IncidencePrevalenceForm:
             f"--conceptSet={shlex.quote(self.checked_concept_sets())} && "
             f"Rscript inst/scripts/incidencePrevalence.R {shlex.quote(denominator_cohort_name)} "
             f"--outcomeCohortName={shlex.quote(outcome_cohort_name)} "
-            "--denominatorCohortDateRange=1990-01-01,2030-01-01"
+            "--denominatorCohortDateRange=1990-01-01,2030-01-01 "
             f"--estimateIncidenceOutputPath=outputs/incidence.csv && "
             f"Rscript inst/scripts/cleanUpCohortTables.R {shlex.quote(outcome_cohort_name)} && "
             f"Rscript inst/scripts/cleanUpCohortTables.R {shlex.quote(denominator_cohort_name)}"
