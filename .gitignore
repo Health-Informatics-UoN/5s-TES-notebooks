@@ -12,3 +12,4 @@ wheels/
 contingency-tables/.DS_Store
 workbench-delphi/config.yml
 /workbench-delphi/output
+*/config.yml
