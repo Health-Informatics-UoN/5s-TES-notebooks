@@ -12,4 +12,8 @@ wheels/
 contingency-tables/.DS_Store
 workbench-delphi/config.yml
 /workbench-delphi/output
+
+# Notebook nonsense
+*/.ipynb_checkpoints/*-checkpoint.ipynb
+/Darwin-EU/output
 */config.yml

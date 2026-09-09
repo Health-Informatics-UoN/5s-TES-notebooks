@@ -12,8 +12,6 @@ dependencies = [
     "scipy>=1.17.1",
     "partialstats",
     "python-omop-vis",
-    "altair>=6.0.0",
-    "altair-upset>=0.3.0",
 ]
 
 [project.optional-dependencies]
