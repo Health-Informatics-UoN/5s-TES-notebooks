@@ -3,12 +3,13 @@ import secrets
 import shlex
 import string
 from urllib.error import HTTPError
-import logging
 
 import ipywidgets as widgets
 from five_safes_tes_workbench.workbench import Workbench
 from IPython.display import display
 from ipywidgets.widgets.widget_box import VBox
+
+from omop_metadata_utils import DistributionCodesets
 
 class WorkbenchForm:
     def __init__(
@@ -31,18 +32,15 @@ class WorkbenchForm:
             layout=layout,
         )
 
-        # self.output = widgets.Output()
-        # self.check_conn_button = widgets.Button(description="Check your connection")
-        # self.check_conn_button.on_click(self.check_connection)
+        self._output: widgets.Output = widgets.Output()
+        self._check_conn_button = widgets.Button(description="Check your connection")
+        self._check_conn_button.on_click(self.check_connection)
 
     def display(self):
-        display(VBox([self._username, self._password]))
+        display(VBox([self._username, self._password, self._check_conn_button, self._output]))
 
     def validate(self) -> Workbench:
         wb = Workbench()
-
-        logger = logging.getLogger()
-        logger.setLevel(logging.CRITICAL)
 
         wb.validate(
             project="OHDSIDemo",
@@ -55,28 +53,29 @@ class WorkbenchForm:
             password=self._password.value,
         )
 
-        logger.setLevel(logging.INFO)
-
         return wb
 
-    def check_connection(self, known_task: int = 1856):
+    def check_connection(self, _button=None, known_task: int = 1856):
+        self._output.clear_output()
         wb = self.validate()
-
-        try:
-            wb.fetch_outputs(task_id=known_task)
-            print("\n\n\n----------------------------")
-            print("You're connecting just fine!")
-        except HTTPError:
-            print("Bad connection 😱")
+        with self._output:
+            try:
+                wb.fetch_outputs(task_id=known_task)
+                print("\n\n\n----------------------------")
+                print("You're connecting just fine!")
+            except HTTPError:
+                print("Bad connection 😱")
 
 
 class IncidencePrevalenceForm:
     def __init__(
             self,
-            layout: widgets.Layout = widgets.Layout(width = "50%")
+            wb: Workbench,
+            layout: widgets.Layout = widgets.Layout(width = "50%"),
             ) -> None:
+        self._wb = wb
         self._concept_sets: widgets.Textarea = widgets.Textarea(
-            value='{"diabetes": [4131907,4220821]}', description="Concept sets", layout=layout
+            value='{"diabetes": [201254,201826]}', description="Concept sets", layout=layout
         )
         self._outcome_cohort_name: widgets.Text = widgets.Text(
             value="diabetes_cohort", description="Outcome cohort name", layout=layout
@@ -87,6 +86,9 @@ class IncidencePrevalenceForm:
         self._researcher_name: widgets.Text = widgets.Text(
             value="John Snow", description="Researcher name", layout=layout
         )
+        self._output: widgets.Output = widgets.Output()
+        self._submit_button = widgets.Button(description="Submit")
+        self._submit_button.on_click(self.submit_task)
 
     @property
     def researcher_name(self) -> str:
@@ -100,6 +102,8 @@ class IncidencePrevalenceForm:
                     self._outcome_cohort_name,
                     self._concept_sets,
                     self._denominator_cohort_name,
+                    self._submit_button,
+                    self._output
                 ]
             )
         )
@@ -137,3 +141,39 @@ class IncidencePrevalenceForm:
                 "command": ["/bin/sh", "-c", full_script],
             }
         ]
+
+    def submit_task(self, _button,):
+        self._output.clear_output()
+        with self._output:
+            self._wb.build_tes.custom(
+                name=f"OHDSI - {self.researcher_name}",
+                description="Darwin EU - Incidence prevalence demo analysis",
+                executors=self.render_executor(),
+                outputs=[
+                    {
+                        "name": "Analysis Results Location",
+                        "description": "Analysis Results Location",
+                        "url": "s3://",
+                        "path": "/outputs",
+                        "type": "DIRECTORY",
+                    }
+                ],
+            )
+            self._wb.submit()
+        return self._wb
+
+class CodesetDisplay:
+    def __init__(self, codesets: DistributionCodesets) -> None:
+        self.codesets = codesets
+        self.search_term = widgets.Text(value="neoplasm", description="Search string")
+
+    def plot_search_codes(self, search_str: str):
+        display(
+            self.codesets.plot_by_codes(
+                self.codesets.get_codes_by_substring_match(search_str)["OMOP"]
+            )
+        )
+
+    def display(self):
+        out = widgets.interactive_output(self.plot_search_codes, {"search_str": self.search_term})
+        return widgets.VBox([self.search_term, out])
