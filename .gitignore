@@ -16,3 +16,4 @@ workbench-delphi/config.yml
 # Notebook nonsense
 */.ipynb_checkpoints/*-checkpoint.ipynb
 /Darwin-EU/output
+*/config.yml
