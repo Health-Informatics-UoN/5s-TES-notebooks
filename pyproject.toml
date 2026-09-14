@@ -11,9 +11,9 @@ dependencies = [
     "five-safes-tes-workbench>=0.4.0",
     "scipy>=1.17.1",
     "partialstats",
-    "python-omop-vis",
     "altair>=6.0.0",
     "altair-upset>=0.3.0",
+    "python-omop-vis",
 ]
 
 [project.optional-dependencies]

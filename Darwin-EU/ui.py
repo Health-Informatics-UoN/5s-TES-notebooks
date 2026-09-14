@@ -11,11 +11,11 @@ from ipywidgets.widgets.widget_box import VBox
 
 from omop_metadata_utils import DistributionCodesets
 
+DEFAULT_LAYOUT = widgets.Layout(width="50%")
+
+
 class WorkbenchForm:
-    def __init__(
-            self,
-            layout: widgets.Layout = widgets.Layout(width = "50%")
-            ) -> None:
+    def __init__(self, layout: widgets.Layout = DEFAULT_LAYOUT) -> None:
         self._username: widgets.Text = widgets.Text(
             value="Who are you?",
             placeholder="Who are you?",
@@ -37,7 +37,11 @@ class WorkbenchForm:
         self._check_conn_button.on_click(self.check_connection)
 
     def display(self):
-        display(VBox([self._username, self._password, self._check_conn_button, self._output]))
+        display(
+            VBox(
+                [self._username, self._password, self._check_conn_button, self._output]
+            )
+        )
 
     def validate(self) -> Workbench:
         wb = Workbench()
@@ -69,19 +73,23 @@ class WorkbenchForm:
 
 class IncidencePrevalenceForm:
     def __init__(
-            self,
-            wb: Workbench,
-            layout: widgets.Layout = widgets.Layout(width = "50%"),
-            ) -> None:
+        self,
+        wb: Workbench,
+        layout: widgets.Layout = DEFAULT_LAYOUT,
+    ) -> None:
         self._wb = wb
         self._concept_sets: widgets.Textarea = widgets.Textarea(
-            value='{"diabetes": [201254,201826]}', description="Concept sets", layout=layout
+            value='{"diabetes": [201254,201826]}',
+            description="Concept sets",
+            layout=layout,
         )
         self._outcome_cohort_name: widgets.Text = widgets.Text(
             value="diabetes_cohort", description="Outcome cohort name", layout=layout
         )
         self._denominator_cohort_name: widgets.Text = widgets.Text(
-            value="diabetes_denominator", description="Denominator cohort name", layout=layout
+            value="diabetes_denominator",
+            description="Denominator cohort name",
+            layout=layout,
         )
         self._researcher_name: widgets.Text = widgets.Text(
             value="John Snow", description="Researcher name", layout=layout
@@ -103,14 +111,17 @@ class IncidencePrevalenceForm:
                     self._concept_sets,
                     self._denominator_cohort_name,
                     self._submit_button,
-                    self._output
+                    self._output,
                 ]
             )
         )
 
     def checked_concept_sets(self) -> str:
         try:
-            concept_dict = {str(k): [int(x) for x in v] for k,v in json.loads(self._concept_sets.value).items()}
+            concept_dict = {
+                str(k): [int(x) for x in v]
+                for k, v in json.loads(self._concept_sets.value).items()
+            }
             return json.dumps(concept_dict)
         except ValueError:
             raise ValueError("Invalid concept set!")
@@ -129,7 +140,7 @@ class IncidencePrevalenceForm:
             f"--conceptSet={shlex.quote(self.checked_concept_sets())} && "
             f"Rscript inst/scripts/incidencePrevalence.R {shlex.quote(denominator_cohort_name)} "
             f"--outcomeCohortName={shlex.quote(outcome_cohort_name)} "
-            "--denominatorCohortDateRange=1990-01-01,2030-01-01 "
+            "--denominatorCohortDateRange=1984-01-01,2004-01-01 "
             f"--estimateIncidenceOutputPath=outputs/incidence.csv && "
             f"Rscript inst/scripts/cleanUpCohortTables.R {shlex.quote(outcome_cohort_name)} && "
             f"Rscript inst/scripts/cleanUpCohortTables.R {shlex.quote(denominator_cohort_name)}"
@@ -142,7 +153,10 @@ class IncidencePrevalenceForm:
             }
         ]
 
-    def submit_task(self, _button,):
+    def submit_task(
+        self,
+        _button,
+    ):
         self._output.clear_output()
         with self._output:
             self._wb.build_tes.custom(
@@ -162,6 +176,7 @@ class IncidencePrevalenceForm:
             self._wb.submit()
         return self._wb
 
+
 class CodesetDisplay:
     def __init__(self, codesets: DistributionCodesets) -> None:
         self.codesets = codesets
@@ -175,5 +190,7 @@ class CodesetDisplay:
         )
 
     def display(self):
-        out = widgets.interactive_output(self.plot_search_codes, {"search_str": self.search_term})
+        out = widgets.interactive_output(
+            self.plot_search_codes, {"search_str": self.search_term}
+        )
         return widgets.VBox([self.search_term, out])
