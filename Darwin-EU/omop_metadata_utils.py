@@ -1,11 +1,13 @@
-from io import StringIO
-from typing import Any
 import json
+from io import StringIO
 from pathlib import Path
-import pandas as pd
+from typing import Any
+
 import altair as alt
 import altair_upset as au
+import pandas as pd
 from pydantic import BaseModel, model_validator
+
 
 class DistributionCodesets:
     """
@@ -18,6 +20,7 @@ class DistributionCodesets:
     tables: dict[str, pd.DataFrame]
         Tables loaded from Bunny JSON
     """
+
     def __init__(self, table_paths: dict[str, str]) -> None:
         self.table_names = list(table_paths.keys())
         self.tables = build_tables(table_paths)
@@ -32,10 +35,7 @@ class DistributionCodesets:
         pd.DataFrame
             A pandas DataFrame where each row is an OMOP code, each column is a TRE, and each cell is a count of individuals
         """
-        dfs = [
-            df
-                .loc[df["OMOP"] != 0]
-        for df in self.tables.values()]
+        dfs = [df.loc[df["OMOP"] != 0] for df in self.tables.values()]
         return pd.concat(dfs).pivot(index="OMOP", columns="TRE", values="COUNT")
 
     @property
@@ -49,10 +49,14 @@ class DistributionCodesets:
             A pandas series of TRE memberships for each OMOP code
         """
         counts = self.counts_by_TRE
-        return pd.Series(counts.apply(
-            lambda row: str(list([counts.columns[i] for i, x in enumerate(row) if x > 0])),
-                            axis=1
-        ))
+        return pd.Series(
+            counts.apply(
+                lambda row: str(
+                    [counts.columns[i] for i, x in enumerate(row) if x > 0]
+                ),
+                axis=1,
+            )
+        )
 
     @property
     def code_intersections(self) -> pd.DataFrame:
@@ -99,7 +103,9 @@ class DistributionCodesets:
         filtered_membership = membership[membership["membership"] == membership_string]
         return pd.DataFrame(filtered_membership)
 
-    def get_codes_by_substring_match(self, query_string: str, regex: bool = True) -> pd.DataFrame:
+    def get_codes_by_substring_match(
+        self, query_string: str, regex: bool = True
+    ) -> pd.DataFrame:
         """
         Search codes by whether the OMOP description contains some query_string
 
@@ -116,7 +122,11 @@ class DistributionCodesets:
             A DataFrame of codes that match the search criterion
         """
         counts = self.all_descriptions.reset_index()
-        return pd.DataFrame(counts[counts["OMOP_DESCR"].str.contains(query_string, regex=regex, case=False)])
+        return pd.DataFrame(
+            counts[
+                counts["OMOP_DESCR"].str.contains(query_string, regex=regex, case=False)
+            ]
+        )
 
     def plot_top_k_by_count(self, k: int) -> alt.Chart:
         """
@@ -134,7 +144,9 @@ class DistributionCodesets:
         """
         counts = self.counts_by_TRE.fillna(0)
         counts["total"] = counts.apply(lambda row: sum(row), axis=1)
-        top_k_by_count = counts.sort_values(by="total", ascending=False).drop("total", axis=1)[:k]
+        top_k_by_count = counts.sort_values(by="total", ascending=False).drop(
+            "total", axis=1
+        )[:k]
         top_k_by_count = top_k_by_count.stack().reset_index()
         top_k_by_count.columns = ["OMOP", "TRE", "Count"]
         top_k_by_count = top_k_by_count.join(self.all_descriptions, on="OMOP")
@@ -173,18 +185,29 @@ class DistributionCodesets:
 
         tre_mat = []
 
-        for tre1 in self.tables.keys():
-            for tre2 in self.tables.keys():
+        for tre1 in self.tables:
+            for tre2 in self.tables:
                 intersection = counts[[tre1, tre2]].dropna()
                 total = counts[tre1].dropna()
-                tre_mat.append({"tre1": tre1, "tre2": tre2, "count": len(intersection), "fraction": len(intersection)/len(total)})
-        
-        return alt.Chart(pd.DataFrame(tre_mat)).mark_rect(cornerRadius=20).encode(
-                alt.X('tre1'),
-                alt.Y('tre2'),
-                alt.Color('fraction').scale(scheme="greens"),
-                alt.Tooltip('count')
+                tre_mat.append(
+                    {
+                        "tre1": tre1,
+                        "tre2": tre2,
+                        "count": len(intersection),
+                        "fraction": len(intersection) / len(total),
+                    }
+                )
+
+        return (
+            alt.Chart(pd.DataFrame(tre_mat))
+            .mark_rect(cornerRadius=20)
+            .encode(
+                alt.X("tre1"),
+                alt.Y("tre2"),
+                alt.Color("fraction").scale(scheme="greens"),
+                alt.Tooltip("count"),
             )
+        )
 
     def plot_upset(self) -> alt.Chart:
         """
@@ -199,20 +222,14 @@ class DistributionCodesets:
         # This nonsense is necessary because the upsetplot library throws a wobbly with
         # the funny indices you get from the pivot
         data = pd.DataFrame(
-                self
-                .counts_by_TRE
-                .map(lambda x: 1 if x > 0 else 0)
-                .reset_index(drop=True)
-                .to_dict()
-                )
+            self.counts_by_TRE.map(lambda x: 1 if x > 0 else 0)
+            .reset_index(drop=True)
+            .to_dict()
+        )
 
         return au.UpSetAltair(
-                data=data,
-                sets=list(self.tables.keys()),
-                title="Codes in datasets"
-                )
-
-
+            data=data, sets=list(self.tables.keys()), title="Codes in datasets"
+        )
 
 
 def build_tables(table_names: dict[str, str]) -> dict[str, pd.DataFrame]:
@@ -233,11 +250,12 @@ def build_tables(table_names: dict[str, str]) -> dict[str, pd.DataFrame]:
     for k, table in tables.items():
         table.insert(0, "TRE", k)
         table.drop(
-            [
-                "DESCRIPTION", "MIN", "Q1", "MEDIAN", "MEAN", "Q3", "MAX"
-            ], axis = 1, inplace=True
+            ["DESCRIPTION", "MIN", "Q1", "MEDIAN", "MEAN", "Q3", "MAX"],
+            axis=1,
+            inplace=True,
         )
     return tables
+
 
 def count_bar(df: pd.DataFrame) -> alt.Chart:
     """
@@ -248,14 +266,16 @@ def count_bar(df: pd.DataFrame) -> alt.Chart:
     alt.Chart
         A bar chart
     """
-    return alt.Chart(df).mark_bar().encode(
+    return (
+        alt.Chart(df)
+        .mark_bar()
+        .encode(
             alt.X("Count"),
             alt.Y("OMOP:N").sort("-x"),
             alt.Color("TRE"),
-            alt.Tooltip("OMOP_DESCR")
-            )
-
-
+            alt.Tooltip("OMOP_DESCR"),
+        )
+    )
 
 
 class DistributionQueryFile(BaseModel):
@@ -263,6 +283,7 @@ class DistributionQueryFile(BaseModel):
     In decoded Bunny Outputs, there are "files" in the queryResult attribute.
     This model represents the fields in a "file"
     """
+
     file_name: str
     file_data: str
     file_description: str
@@ -280,10 +301,7 @@ class DistributionQueryFile(BaseModel):
         pl.DataFrame
             The data held in the file_data string as a data frame
         """
-        return pd.read_csv(
-            StringIO(self.file_data),
-            sep="\t"
-        )
+        return pd.read_csv(StringIO(self.file_data), sep="\t")
 
 
 class DistributionQueryResult(BaseModel):
@@ -291,10 +309,11 @@ class DistributionQueryResult(BaseModel):
     One of the attributes of bunny outputs is a `queryResult`.
     A modification from the original is that the `files` attribute is an array in the JSON, but here I have pulled the `file_name` attribute from each file to create a dictionary so you can ergonomically get files by their name.
     """
+
     count: int
     datasetCount: int
     files: dict[str, DistributionQueryFile]
-    
+
     @model_validator(mode="before")
     @classmethod
     def hoist_filenames(cls, data=Any) -> Any:
@@ -307,25 +326,26 @@ class DistributionQueryResult(BaseModel):
             if "files" in data:
                 files = {file["file_name"]: file for file in data["files"]}
                 return {
-                        "count": data["count"],
-                        "datasetCount": data["datasetCount"],
-                        "files": files,
-                        }
+                    "count": data["count"],
+                    "datasetCount": data["datasetCount"],
+                    "files": files,
+                }
             else:
                 return data
-
 
 
 class DistributionQueryTSVOutput(BaseModel):
     """
     The overall format for a Bunny output
     """
+
     uuid: str
     status: str
     collection_id: str
     message: str
     protocolVersion: str
     queryResult: DistributionQueryResult
+
 
 def get_distribution_table(path: Path) -> pd.DataFrame:
     """
