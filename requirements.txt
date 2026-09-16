@@ -4,6 +4,6 @@ pydantic>=2.12.5
 five-safes-tes-workbench>=0.4.0
 scipy>=1.17.1
 partialstats @ git+https://github.com/Health-Informatics-UoN/partialstats/
-python-omop-vis @ https://github.com/health-Informatics-UoN/python-omop-vis#fb3fa2b6230fee45cdc487fa3f572346fc35a34d
+python-omop-vis @ https://github.com/health-Informatics-UoN/python-omop-vis@fb3fa2b6230fee45cdc487fa3f572346fc35a34d
 altair>=6.0.0
 altair-upset>=0.3.0
