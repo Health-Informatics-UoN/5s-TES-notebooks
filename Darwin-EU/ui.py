@@ -17,7 +17,6 @@ DEFAULT_LAYOUT = widgets.Layout(width="50%")
 class WorkbenchForm:
     def __init__(self, layout: widgets.Layout = DEFAULT_LAYOUT) -> None:
         self._username: widgets.Text = widgets.Text(
-            value="Who are you?",
             placeholder="Who are you?",
             description="User name:",
             disabled=False,
@@ -25,7 +24,6 @@ class WorkbenchForm:
         )
 
         self._password: widgets.Password = widgets.Password(
-            value="password",
             placeholder="Enter password",
             description="Password:",
             disabled=False,
@@ -44,6 +42,10 @@ class WorkbenchForm:
         )
 
     def validate(self) -> Workbench:
+        if self._username.value == "":
+            raise ValueError("Provide a username")
+        if self._password.value == "":
+            raise ValueError("Provide a password")
         wb = Workbench()
 
         wb.validate(
@@ -86,13 +88,8 @@ class IncidencePrevalenceForm:
         self._outcome_cohort_name: widgets.Text = widgets.Text(
             value="diabetes_cohort", description="Outcome cohort name", layout=layout
         )
-        self._denominator_cohort_name: widgets.Text = widgets.Text(
-            value="diabetes_denominator",
-            description="Denominator cohort name",
-            layout=layout,
-        )
         self._researcher_name: widgets.Text = widgets.Text(
-            value="John Snow", description="Researcher name", layout=layout
+            description="Researcher name", layout=layout
         )
         self._output: widgets.Output = widgets.Output()
         self._submit_button = widgets.Button(description="Submit")
@@ -100,6 +97,8 @@ class IncidencePrevalenceForm:
 
     @property
     def researcher_name(self) -> str:
+        if self._researcher_name.value == "":
+            raise ValueError("Provide a researcher name")
         return self._researcher_name.value
 
     def display(self):
@@ -109,7 +108,6 @@ class IncidencePrevalenceForm:
                     self._researcher_name,
                     self._outcome_cohort_name,
                     self._concept_sets,
-                    self._denominator_cohort_name,
                     self._submit_button,
                     self._output,
                 ]
@@ -134,7 +132,7 @@ class IncidencePrevalenceForm:
     def render_executor(self):
         random_id = self.random_table_ids(8)
         outcome_cohort_name = f"{self._outcome_cohort_name.value}{random_id}"
-        denominator_cohort_name = f"{self._denominator_cohort_name.value}{random_id}"
+        denominator_cohort_name = f"denominator_{random_id}"
         full_script = (
             f"Rscript inst/scripts/defineConceptCohortSet.R {shlex.quote(outcome_cohort_name)} "
             f"--conceptSet={shlex.quote(self.checked_concept_sets())} && "
@@ -156,7 +154,7 @@ class IncidencePrevalenceForm:
     def submit_task(
         self,
         _button,
-    ):
+    ) -> Workbench | None:
         self._output.clear_output()
         with self._output:
             self._wb.build_tes.custom(
