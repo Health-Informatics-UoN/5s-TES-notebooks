@@ -14,6 +14,7 @@ dependencies = [
     "altair>=6.0.0",
     "altair-upset>=0.3.0",
     "python-omop-vis",
+    "tes-omop-callers",
 ]
 
 [project.optional-dependencies]
@@ -33,3 +34,4 @@ members = [
 [tool.uv.sources]
 partialstats = { git = "https://github.com/Health-Informatics-UoN/partialstats/" }
 python-omop-vis = { git = "https://github.com/health-Informatics-UoN/python-omop-vis" }
+tes-omop-callers = { git = "https://github.com/Health-Informatics-UoN/tes-omop-callers" }
