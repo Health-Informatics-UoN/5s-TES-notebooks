@@ -3,7 +3,8 @@ pandas>=3.0.1
 pydantic>=2.12.5
 five-safes-tes-workbench>=0.4.0
 scipy>=1.17.1
-partialstats @ git+https://github.com/Health-Informatics-UoN/partialstats/
-python-omop-vis @ git+https://github.com/health-Informatics-UoN/python-omop-vis.git@fb3fa2b6230fee45cdc487fa3f572346fc35a34d
+partialstats @ git+https://github.com/Health-Informatics-UoN/partialstats@204ac37f111fc03d8449694c6ca3d343e015f645
 altair>=6.0.0
 altair-upset>=0.3.0
+python-omop-vis @ git+https://github.com/health-Informatics-UoN/python-omop-vis@a6a675d74719ba91eee10e08c47cc67f86197958
+tes-omop-callers @ git+https://github.com/Health-Informatics-UoN/tes-omop-callers@54ff8359cbabc41aae412323becd0cdafac709b6
